@@ -1,30 +1,28 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-class PVector:
-    def __init__(self, ):
-
-
-def parse(strin: str):
-    end = strin.find("UrQMD")
-    st = end
-    while st >= 0:
-        st = end
-        end = strin.find("UrQMD", st + 1)
-        parse_event(strin[st:end])
-
-
-def parse_event(strin: str):
-    for line in strin.splitlines()[1:]:
-        for word in line.split(" "):
-            print(word)
+import pandas as pd
+import numpy as np
 
 
 if __name__ == "__main__":
-    parse("UrQMD asd qwdqwd qwd dqwd\n"
-                "data1 data2 data3\n"
-                "UrQMD  2 12e 21d12d   12e d\t \n"
-                "data4 data5 data6\n")
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    df = pd.read_csv(input("Enter filename: "), sep=' ', names=['t', 'x', 'y', 'z', 'p0', 'px', 'py', 'pz', 'm', 'ityp',
+                                                                'di3', 'ch', 'pcn', 'ncoll', 'ppt', 'extra'], usecols=range(15))
+    tottime = float(df.iloc[5, 7])
+    dtime = float(df.iloc[5, 9])
+    time = dtime
+
+    events = []
+    event = []
+    seps = df[df['y'].isna()].index
+
+    # Parse events
+
+    for sep in seps:
+        eSlice: pd.DataFrame = df.iloc[sep + 2 : sep + 2 + int(df.iloc[sep]['t'])]
+        eSlice = eSlice.astype(float)
+        p = np.sqrt(np.square(eSlice['px']) + np.square(eSlice['py']) + np.square(eSlice['pz']))
+        eSlice['eta'] = np.log((p + eSlice['pz']) / (p - eSlice['pz']))
+        event.append(eSlice)
+        time += dtime
+        if time > tottime:
+            events.append(event.copy())
+            event = []
+            time = dtime
