@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
@@ -26,3 +27,15 @@ if __name__ == "__main__":
         if time > tottime:
             time = dtime
             nev += 1
+
+    # Some plots
+
+    fig : plt.Figure = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+
+    d1 = data[1 == data['nev']]
+    for time in d1['t'].unique():
+        d1t = d1[d1['t'] == time]
+        ax.scatter3D(d1t['x'], d1t['y'], d1t['z'], marker='o')
+        plt.savefig(f'./pics/passing_{time}_fmc.png', dpi=300)
+        ax.clear()
