@@ -7,3 +7,7 @@
 
 #result location
 pics/
+
+#archives
+*.zip
+*.gz
