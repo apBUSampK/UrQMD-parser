@@ -4,7 +4,7 @@ import numpy as np
 
 if __name__ == "__main__":
     df = pd.read_csv(input("Enter filename: "), sep=' ', names=['t', 'x', 'y', 'z', 'p0', 'px', 'py', 'pz', 'm', 'ityp',
-                                                                'di3', 'ch', 'pcn', 'ncoll', 'ppt', 'eta', 'nev'])
+                                                                'di3', 'ch', 'pcn', 'ncoll', 'ppt', 'eta', 'nev'], low_memory=False)
     data = pd.DataFrame(columns=df.columns)
     tottime = float(df.iloc[5, 7])
     dtime = float(df.iloc[5, 9])
