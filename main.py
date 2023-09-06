@@ -11,11 +11,14 @@ df15 = pd.read_csv(pr15 + '_1.csv', sep=' ', names=['id', 't', 'x', 'y', 'z', 'p
                                                     'ityp', 'di3', 'ch', 'pcn', 'ncoll', 's', 'debug'],
                    usecols=['t', 'x', 'y', 'z', 'p0', 'px', 'py', 'pz', 'ityp', 'pcn', 'debug'], dtype=float).rename(columns={'debug' : 'nev'})
 
-data14 = pd.DataFrame(columns=df14.columns)
-data15 = pd.DataFrame(columns=df15.columns)
-tottime = float(df14.iloc[5, 7])
-dtime = float(df14.iloc[5, 9])
-time = dtime
+if __name__ == "__main__":
+    df = pd.read_csv(input("Enter filename: "), sep=' ', names=['t', 'x', 'y', 'z', 'p0', 'px', 'py', 'pz', 'm', 'ityp',
+                                                                'di3', 'ch', 'pcn', 'ncoll', 'ppt', 'eta', 'nev'], low_memory=False)
+    data = pd.DataFrame(columns=df.columns)
+    tottime = float(df.iloc[5, 7])
+    dtime = float(df.iloc[5, 9])
+    mass = int(df.iloc[1, 3]) + int(df.iloc[1, 8])
+    time = dtime
 
 seps = df14[df14['y'].isna()].index
 nev = 1
@@ -39,14 +42,11 @@ nev = 1
     fig : plt.Figure = plt.figure()
     ax = fig.add_subplot(projection='3d')
 
-    # nucleons only
-    data = data[data['ityp'] == 1]
-
     d1 = data[1 == data['nev']]
     for time in d1['t'].unique():
         d1t = d1[d1['t'] == time]
-        d1ts = d1t[d1t['ncoll'] == 0]
-        d1tp = d1t[d1t['ncoll'] != 0]
+        d1ts = d1t[d1t['ppt'] == 0]
+        d1tp = d1t[d1t['ppt'] != 0]
         ax.scatter3D(d1ts['x'], d1ts['y'], d1ts['z'], marker='o', color='b')
         ax.scatter3D(d1tp['x'], d1tp['y'], d1tp['z'], marker='o', color='r')
         ax.set_xlabel('$x$, fm')
@@ -64,17 +64,21 @@ nev = 1
 
     npart = []
 
+    #nucleons only now
+    data = data[data['ityp'] == 1]
+
     for time in d1['t'].unique():
         dt = data[data['t'] == time]
-        ax.hist(dt['eta'], histtype='step', edgecolor='k', density=True)
+        ax.hist(dt['eta'], histtype='step', edgecolor='k', density=True, bins=50)
         ax.set_xlabel(r'$\eta$')
         ax.set_ylabel(r'$<P(\eta)>$')
         ax.set_title(rf'$b = 2 fm, \tau = {time} fm / c$')
         plt.savefig(f'./pics/eta/{time}_fmc.png', dpi=300)
         ax.clear()
-        npart.append(dt[dt['ppt'] != 0].shape[0] / nev)
+        npart.append((mass - dt[dt['ppt'] == 0].shape[0]) / nev)
 
     ax.scatter(np.arange(dtime, tottime + dtime/2, dtime), npart)
+    ax.grid()
     ax.set_xlabel(r'$\tau, fm$')
     ax.set_ylabel(r'$<N_{part}>$')
     plt.savefig('./pics/npart.png', dpi=300)
