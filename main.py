@@ -39,9 +39,42 @@ nev = 1
     fig : plt.Figure = plt.figure()
     ax = fig.add_subplot(projection='3d')
 
+    # nucleons only
+    data = data[data['ityp'] == 1]
+
     d1 = data[1 == data['nev']]
     for time in d1['t'].unique():
         d1t = d1[d1['t'] == time]
-        ax.scatter3D(d1t['x'], d1t['y'], d1t['z'], marker='o')
-        plt.savefig(f'./pics/passing_{time}_fmc.png', dpi=300)
+        d1ts = d1t[d1t['ncoll'] == 0]
+        d1tp = d1t[d1t['ncoll'] != 0]
+        ax.scatter3D(d1ts['x'], d1ts['y'], d1ts['z'], marker='o', color='b')
+        ax.scatter3D(d1tp['x'], d1tp['y'], d1tp['z'], marker='o', color='r')
+        ax.set_xlabel('$x$, fm')
+        ax.set_ylabel('$y$, fm')
+        ax.set_zlabel('$z$, fm')
+        ax.set_xlim(-20, 20)
+        ax.set_ylim(-20, 20)
+        ax.set_zlim(-20, 20)
+        ax.set_title(rf'$b = 2 fm, \tau = {time} fm / c$')
+        plt.savefig(f'./pics/3d_evo/{time}_fmc.png', dpi=300)
         ax.clear()
+
+    fig.clear()
+    ax = fig.add_subplot()
+
+    npart = []
+
+    for time in d1['t'].unique():
+        dt = data[data['t'] == time]
+        ax.hist(dt['eta'], histtype='step', edgecolor='k', density=True)
+        ax.set_xlabel(r'$\eta$')
+        ax.set_ylabel(r'$<P(\eta)>$')
+        ax.set_title(rf'$b = 2 fm, \tau = {time} fm / c$')
+        plt.savefig(f'./pics/eta/{time}_fmc.png', dpi=300)
+        ax.clear()
+        npart.append(dt[dt['ppt'] != 0].shape[0] / nev)
+
+    ax.scatter(np.arange(dtime, tottime + dtime/2, dtime), npart)
+    ax.set_xlabel(r'$\tau, fm$')
+    ax.set_ylabel(r'$<N_{part}>$')
+    plt.savefig('./pics/npart.png', dpi=300)
