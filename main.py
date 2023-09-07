@@ -13,7 +13,7 @@ df15 = pd.read_csv(pr15 + '_1.csv', sep=' ', names=['id', 't', 'x', 'y', 'z', 'p
 
 if __name__ == "__main__":
     df = pd.read_csv(input("Enter filename: "), sep=' ', names=['t', 'x', 'y', 'z', 'p0', 'px', 'py', 'pz', 'm', 'ityp',
-                                                                'di3', 'ch', 'pcn', 'ncoll', 'ppt', 'eta', 'nev'], low_memory=False)
+                                                                'di3', 'ch', 'pcn', 'ncoll', 'ppt', 'eta', 'nev'], dtype=str)
     data = pd.DataFrame(columns=df.columns)
     tottime = float(df.iloc[5, 7])
     dtime = float(df.iloc[5, 9])
@@ -75,7 +75,7 @@ nev = 1
         ax.set_title(rf'$b = 2 fm, \tau = {time} fm / c$')
         plt.savefig(f'./pics/eta/{time}_fmc.png', dpi=300)
         ax.clear()
-        npart.append((mass - dt[dt['ppt'] == 0].shape[0]) / nev)
+        npart.append(mass - dt[dt['ppt'] == 0].shape[0] / nev)
 
     ax.scatter(np.arange(dtime, tottime + dtime/2, dtime), npart)
     ax.grid()
