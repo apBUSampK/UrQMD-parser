@@ -1,6 +1,7 @@
 #dat files
 *.dat
 *.csv
+data/
 
 #IDE stuff
 .idea/
