@@ -62,10 +62,11 @@ for nev in df15['nev'].unique():
     el = 0
     inel = 0
     ncoll = 0
+    ncoll_i = 0
     for time in time_arr:
         teSlice = eSlice.loc[lambda df: df['t'] < time].loc[lambda df: df['t'] > time - dtime]
         hSlice = heads.loc[(heads['z'] < time) & (heads['z'] > time - dtime), 'x']
-        hSlice = ~((hSlice == 13) | (hSlice == 17) | (hSlice == 19) | (hSlice == 22) | (hSlice == 26))
+        hSlice = ~((hSlice == 13) | (hSlice == 17) | (hSlice == 19) | (hSlice == 22) | (hSlice == 26) | (hSlice == 35))
         for id in teSlice['id'].unique():
             type = 0
             for event in teSlice.loc[teSlice['id'] == id].index:
@@ -77,7 +78,8 @@ for nev in df15['nev'].unique():
             inel += type
             el += (1 - type)
         ncoll += hSlice.size
-        npart = pd.concat((npart, pd.Series({'time' : time, 'elastic' : el, 'inelastic' : inel, 'sum' : el + inel, 'ncoll' : ncoll}).to_frame().T), ignore_index=True)
+        ncoll_i += hSlice.sum()
+        npart = pd.concat((npart, pd.Series({'time' : time, 'elastic' : el, 'inelastic' : inel, 'sum' : el + inel, 'ncoll' : ncoll, 'ncoll_i' : ncoll_i}).to_frame().T), ignore_index=True)
 
 npart = npart.groupby(['time']).mean()
 
