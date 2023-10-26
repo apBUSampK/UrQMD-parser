@@ -8,5 +8,5 @@ The ```plots``` branch contains modified script with some matplotlib plotting I 
 
 ```shell
 $ python3 reducer.py f14.dat
-$ python3 main.py f14_reduced.csv
+$ python3 processor.py f14_reduced.csv
 ```

@@ -1,6 +1,7 @@
 #dat files
 *.dat
 *.csv
+*.parquet
 data/
 
 #IDE stuff
