@@ -4,7 +4,7 @@ Two small scripts to cram UrQMD f14 file into a pandas DataFrame and save into `
 
 First reduce f14 and f15 files for easier processing and then run processor.py
 
-The `plots` branch contains modified script with some matplotlib plotting I need.
+The `plots` branch contains additional scripts with some matplotlib plotting I need.
 
 ## Usage
 
