@@ -25,10 +25,10 @@ time = d1.index
 
 lns1 = ax1.scatter(time, d1['inelastic'], color='b', label=r"$\mathrm{N}_{part}$")
 lns2 = ax1.scatter(time, func(d1['inelastic'], d1['ncoll_i']), color='k', label=r"$\mathrm{N}_{anc.}$, $f = " + str(f) + r"$, "
-                                                                        + ("default" if func_t == 'd' else "star"))
-ax1.set_title(r"$^{208}$Pb-$^{208}$Pb @ $\sqrt{s_{\mathrm{NN}}} = 4.5$ GeV, $b = 2$ fm")
+                                                                        + ("default" if func_t == 'd' else "STAR"))
+ax1.set_title(r"$^{208}$Pb-$^{208}$Pb @ $\sqrt{s_{\mathrm{NN}}} = 4.5$ GeV, $b = 10$ fm")
 ax1.set_xlabel(r"$\tau$, fm/c")
-ax1.set_xticks(np.arange(0, 16))
+ax1.set_xticks(np.arange(0, 100, 5))
 ax1.tick_params(direction='in')
 ax1.set_ylabel(r"$<\mathrm{N}_{part}>$, $<\mathrm{N}_{anc.}>$")
 
